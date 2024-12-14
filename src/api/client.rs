@@ -168,6 +168,8 @@ impl Client {
     ) -> Result<Response, MediaError> {
         let api_key = override_api_key.unwrap_or(self.api_key.clone());
 
+        let serialized = serde_json::to_string(&video_data).unwrap();
+
         let client = ReqwestClient::new();
         let response = client
             .post(self.instance_uri.clone())
@@ -175,7 +177,7 @@ impl Client {
             .header("Accept", "application/json")
             .header("User-Agent", "Cobalt")
             .header("Authorization", format!("Api-Key {}", api_key))
-            .json(&video_data)
+            .body(serialized)
             .send()
             .await;
 
@@ -191,8 +193,9 @@ impl Client {
 
         if !response.status().is_success() {
             return Err(MediaError::ApiError(format!(
-                "API request failed with status: {}",
-                response.status()
+                "API request failed with status: {} | {:?}",
+                response.status(),
+                response.text().await
             )));
         }
 

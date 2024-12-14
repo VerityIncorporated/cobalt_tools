@@ -32,20 +32,9 @@ mod tests {
         let client = CobaltClient.read().await;
 
         let video_data = MediaRequestData {
-            url: "https://www.instagram.com/p/DCzseO1T9Xa".to_string(),
-            video_quality: Some("1080".to_string()),
-            audio_format: Some("mp3".to_string()),
-            audio_bitrate: Some("320".to_string()),
-            filename_style: Some("basic".to_string()),
-            download_mode: Some("auto".to_string()),
-            youtube_video_codec: Some("h264".to_string()),
-            youtube_dub_lang: Some("en".to_string()),
-            always_proxy: Some(false),
-            disable_metadata: Some(false),
-            tiktok_full_audio: Some(false),
-            tiktok_h265: Some(false),
-            twitter_gif: Some(true),
-            youtube_hls: Some(false),
+            url: "https://www.youtube.com/watch?v=1lML-Uem6Ns".to_string(),
+            filename_style: "basic".to_string(),
+            ..Default::default()
         };
 
         match client.get_media(None, video_data).await {

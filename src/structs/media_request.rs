@@ -9,8 +9,8 @@ pub struct MediaRequestData {
     pub audio_format: Option<String>,
     #[serde(rename = "audioBitrate", skip_serializing_if = "Option::is_none")]
     pub audio_bitrate: Option<String>,
-    #[serde(rename = "filenameStyle", skip_serializing_if = "Option::is_none")]
-    pub filename_style: Option<String>,
+    #[serde(rename = "filenameStyle")]
+    pub filename_style: String,
     #[serde(rename = "downloadMode", skip_serializing_if = "Option::is_none")]
     pub download_mode: Option<String>,
     #[serde(rename = "youtubeVideoCodec", skip_serializing_if = "Option::is_none")]
