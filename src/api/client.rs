@@ -1,6 +1,7 @@
+use futures_util::StreamExt;
 use once_cell::sync::Lazy;
 use reqwest::Client as ReqwestClient;
-use std::{env, sync::Arc};
+use std::{env, fs::File, sync::Arc};
 use tokio::sync::RwLock;
 
 use crate::structs::{
@@ -199,6 +200,29 @@ impl Client {
         };
 
         Ok(final_response)
+    }
+
+    pub async fn download(
+        tunnel_link: String,
+        path: String,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let response = reqwest::get(tunnel_link).await?;
+
+        if !response.status().is_success() {
+            eprintln!("Failed to download file: HTTP {}", response.status());
+            return Err(format!("Failed to download file: HTTP {}", response.status()).into());
+        }
+
+        let mut file = File::create(path).expect("Failed to create file");
+
+        let mut content = response.bytes_stream();
+        while let Some(chunk) = content.next().await {
+            let chunk = chunk?;
+            use std::io::Write;
+            file.write_all(&chunk)?;
+        }
+
+        Ok(())
     }
 }
 
