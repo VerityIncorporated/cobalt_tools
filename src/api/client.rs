@@ -1,7 +1,7 @@
 use futures_util::StreamExt;
 use once_cell::sync::Lazy;
-use reqwest::Client as ReqwestClient;
-use std::{env, fs::File, sync::Arc};
+use reqwest::{header::CONTENT_LENGTH, Client as ReqwestClient};
+use std::{env, fs::File, io::Write, sync::Arc};
 use tokio::sync::RwLock;
 
 use crate::structs::{
@@ -206,22 +206,33 @@ impl Client {
         tunnel_link: String,
         path: String,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let response = reqwest::get(tunnel_link).await?;
-
+        let response = reqwest::get(&tunnel_link).await?;
+    
+        if let Some(content_length) = response.headers().get(CONTENT_LENGTH) {
+            let content_length = content_length.to_str()?.parse::<u64>()?;
+    
+            if content_length == 0 {
+                eprintln!("The file has a content length of 0 bytes. Something went wrong.");
+                return Err("File has a content length of 0 bytes.".into());
+            }
+        } else {
+            eprintln!("Content-Length header is missing. Something went wrong.");
+            return Err("Content-Length header is missing.".into());
+        }
+    
         if !response.status().is_success() {
             eprintln!("Failed to download file: HTTP {}", response.status());
             return Err(format!("Failed to download file: HTTP {}", response.status()).into());
         }
-
+    
         let mut file = File::create(path).expect("Failed to create file");
-
+    
         let mut content = response.bytes_stream();
         while let Some(chunk) = content.next().await {
             let chunk = chunk?;
-            use std::io::Write;
             file.write_all(&chunk)?;
         }
-
+    
         Ok(())
     }
 }
