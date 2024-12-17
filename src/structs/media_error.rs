@@ -1,10 +1,23 @@
 use std::fmt;
 
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Deserialize, Serialize)]
+struct ApiErrorResponse {
+    status: String,
+    error: ApiErrorDetails,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+struct ApiErrorDetails {
+    code: String,
+}
+
 #[derive(Debug)]
 pub enum MediaError {
     RequestError(String),
     DeserializationError(String),
-    ApiError(String)
+    ApiError(String),
 }
 
 impl fmt::Display for MediaError {
