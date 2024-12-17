@@ -1,22 +1,22 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Default, Debug)]
-pub struct MediaRequestData {
-    pub url: String,
+pub struct MediaRequestData<'a> {
+    pub url: &'a str,
     #[serde(rename = "videoQuality", skip_serializing_if = "Option::is_none")]
-    pub video_quality: Option<String>,
+    pub video_quality: Option<&'a str>,
     #[serde(rename = "audioFormat", skip_serializing_if = "Option::is_none")]
-    pub audio_format: Option<String>,
+    pub audio_format: Option<&'a str>,
     #[serde(rename = "audioBitrate", skip_serializing_if = "Option::is_none")]
-    pub audio_bitrate: Option<String>,
+    pub audio_bitrate: Option<&'a str>,
     #[serde(rename = "filenameStyle")]
-    pub filename_style: String,
+    pub filename_style: &'a str,
     #[serde(rename = "downloadMode", skip_serializing_if = "Option::is_none")]
-    pub download_mode: Option<String>,
+    pub download_mode: Option<&'a str>,
     #[serde(rename = "youtubeVideoCodec", skip_serializing_if = "Option::is_none")]
-    pub youtube_video_codec: Option<String>,
+    pub youtube_video_codec: Option<&'a str>,
     #[serde(rename = "youtubeDubLang", skip_serializing_if = "Option::is_none")]
-    pub youtube_dub_lang: Option<String>,
+    pub youtube_dub_lang: Option<&'a str>,
     #[serde(rename = "alwaysProxy", skip_serializing_if = "Option::is_none")]
     pub always_proxy: Option<bool>,
     #[serde(rename = "disableMetadata", skip_serializing_if = "Option::is_none")]

@@ -151,10 +151,10 @@ impl Client {
     ///     }
     /// }
     /// ```
-    pub async fn get_media(
+    pub async fn get_media<'a>(
         &self,
         override_api_key: Option<String>,
-        video_data: MediaRequestData,
+        video_data: MediaRequestData<'a>,
     ) -> Result<Response, MediaError> {
         let api_key = override_api_key.unwrap_or(self.api_key.clone());
 

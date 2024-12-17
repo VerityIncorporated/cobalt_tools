@@ -32,8 +32,8 @@ mod tests {
         let client = CobaltClient.read().await;
 
         let video_data = MediaRequestData {
-            url: "https://www.youtube.com/watch?v=1lML-Uem6Ns".to_string(),
-            filename_style: "basic".to_string(),
+            url: "https://www.youtube.com/watch?v=1lML-Uem6Ns",
+            filename_style: "basic",
             ..Default::default()
         };
 
