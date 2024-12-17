@@ -30,3 +30,29 @@ pub struct MediaRequestData {
     #[serde(rename = "youtubeHLS", skip_serializing_if = "Option::is_none")]
     pub youtube_hls: Option<bool>,
 }
+
+#[derive(Debug, PartialEq)]
+pub enum DownloadMode {
+    Auto,
+    Audio,
+    Mute,
+}
+
+impl DownloadMode {
+    pub fn to_string(&self) -> &str {
+        match self {
+            DownloadMode::Auto => "auto",
+            DownloadMode::Audio => "audio",
+            DownloadMode::Mute => "mute",
+        }
+    }
+
+    pub fn from_str(input: &str) -> Option<DownloadMode> {
+        match input {
+            "auto" => Some(DownloadMode::Auto),
+            "audio" => Some(DownloadMode::Audio),
+            "mute" => Some(DownloadMode::Mute),
+            _ => None,
+        }
+    }
+}
